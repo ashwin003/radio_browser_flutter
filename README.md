@@ -11,25 +11,64 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Wrapper for https://www.radio-browser.info/
+
+Documentation for the API can be found [here](http://de1.api.radio-browser.info/#General)
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Contains wrapper methods for the following endpoints:
+1. Stations
+2. Countries
+3. Languages
+4. Tags
+5. Codecs
+6. Server details
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Import the package:
+
+```dart
+import 'package:radio_browser_flutter/radio_browser_flutter.dart';
+```
+
+Initialize `RadioBrowserClient` before using it:
+
+```dart
+void main() {
+  RadioBrowserClient.initialize(USER_AGENT);
+  runApp(const MyApp());
+}
+```
+
+Please keep the User-Agent descriptive as it helps the API maintainer.
+It can be something like `<APP_NAME>/<APP_VERSION>`.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Call the methods exposed by the API by using the client instance:
 
 ```dart
-const like = 'sample';
+FutureBuilder(
+    future: RadioBrowserClient.instance.codecs
+        .fetch(),
+    builder: ((context, AsyncSnapshot<List<String>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+            return Text(snapshot.error?.toString() ?? "Something went wrong");
+        }
+        var data = snapshot.data!;
+        return ListView.builder(
+        itemCount: data.length,
+        itemBuilder: ((context, index) {
+            return ListTile(title: Text(data[index]));
+        }),
+        );
+    }),
+)
 ```
 
 ## Additional information
