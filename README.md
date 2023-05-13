@@ -51,22 +51,21 @@ Call the methods exposed by the API by using the client instance:
 
 ```dart
 FutureBuilder(
-    future: RadioBrowserClient.instance.codecs
-        .fetch(),
-    builder: ((context, AsyncSnapshot<List<String>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        future: RadioBrowserClient.instance.codecs.fetch(),
+        builder: ((context, AsyncSnapshot<List<Codec>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
+          }
+          if (snapshot.hasError) {
             return Text(snapshot.error?.toString() ?? "Something went wrong");
-        }
-        var data = snapshot.data!;
-        return ListView.builder(
-        itemCount: data.length,
-        itemBuilder: ((context, index) {
-            return ListTile(title: Text(data[index]));
+          }
+          var data = snapshot.data!;
+          return ListView.builder(
+            itemCount: data.length,
+            itemBuilder: ((context, index) {
+              return ListTile(title: Text(data[index].name));
+            }),
+          );
         }),
-        );
-    }),
-)
+      )
 ```

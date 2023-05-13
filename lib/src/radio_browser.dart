@@ -24,6 +24,12 @@ class RadioBrowserClient {
     _instance._initialized = true;
   }
 
+  static RadioBrowserClient get instance {
+    assert(_instance._initialized,
+        'You must initialize Radio Browser client before accessing the instance');
+    return _instance;
+  }
+
   RadioBrowserClient._();
   static final RadioBrowserClient _instance = RadioBrowserClient._();
 
