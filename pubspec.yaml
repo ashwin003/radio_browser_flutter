@@ -1,6 +1,6 @@
 name: radio_browser_flutter
 description: Wrapper for radio browser API. Radio Browser API provides endpoints for retrieving online radio information from all over the world.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/ashwin003/radio_browser_flutter
 repository: https://github.com/ashwin003/radio_browser_flutter
 issue_tracker: https://github.com/ashwin003/radio_browser_flutter/issues

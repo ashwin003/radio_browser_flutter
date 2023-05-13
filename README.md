@@ -13,7 +13,7 @@ and the Flutter guide for
 
 Wrapper for https://www.radio-browser.info/
 
-Documentation for the API can be found [here](http://de1.api.radio-browser.info/#General)
+Documentation for the API can be found [here](https://de1.api.radio-browser.info/#General)
 
 ## Features
 
