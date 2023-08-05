@@ -36,8 +36,8 @@ import 'package:radio_browser_flutter/radio_browser_flutter.dart';
 Initialize `RadioBrowserClient` before using it:
 
 ```dart
-void main() {
-  RadioBrowserClient.initialize(USER_AGENT);
+void main() async {
+  await RadioBrowserClient.initialize(USER_AGENT);
   runApp(const MyApp());
 }
 ```
