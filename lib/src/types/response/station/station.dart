@@ -181,7 +181,8 @@ class Station extends Equatable {
     this.hasExtendedInfo,
   );
 
-  static List<String> _splitByComma(String value) => value.split(",");
+  static List<String> _splitByComma(String value) =>
+      value.split(",").where((e) => e.isNotEmpty).toList();
 
   static bool _intToBool(int value) => value == 1;
 
