@@ -23,3 +23,7 @@
 * Web: uses a fixed API server instead of DNS lookup + ping (neither works in browsers); `dart_ping` is no longer compiled into web builds
 * Fixes comma-separated fields (`tags`, `language`, `languageCodes`) on `Station` and `StationCheck` returning `[""]` instead of an empty list when the API sends an empty string
 * Fixes incorrect expectations in station service tests
+
+## 0.1.1
+
+* Fixes a crash for sorting by quality

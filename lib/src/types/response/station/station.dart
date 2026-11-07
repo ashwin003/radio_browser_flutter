@@ -63,11 +63,11 @@ class Station extends Equatable {
   final int votes;
 
   /// Last time when the stream information was changed in the database
-  @JsonKey(name: "lastchangetime")
+  @JsonKey(name: "lastchangetime", defaultValue: "")
   final String lastChangeTime;
 
   /// Last time when the stream information was changed in the database
-  @JsonKey(name: "lastchangetime_iso8601")
+  @JsonKey(name: "lastchangetime_iso8601", defaultValue: "")
   final String lastChangeTimeISO;
 
   /// The codec of this stream recorded at the last check.
@@ -87,35 +87,35 @@ class Station extends Equatable {
   final bool lastCheckOk;
 
   /// The last time when any radio-browser server checked the online state of this stream
-  @JsonKey(name: "lastchecktime")
+  @JsonKey(name: "lastchecktime", defaultValue: "")
   final String lastCheckTime;
 
   /// The last time when any radio-browser server checked the online state of this stream
-  @JsonKey(name: "lastchecktime_iso8601")
+  @JsonKey(name: "lastchecktime_iso8601", defaultValue: "")
   final String lastCheckTimeISO;
 
   /// The last time when the stream was checked for the online status with a positive result
-  @JsonKey(name: "lastcheckoktime")
+  @JsonKey(name: "lastcheckoktime", defaultValue: "")
   final String lastCheckOkTime;
 
   /// The last time when the stream was checked for the online status with a positive result
-  @JsonKey(name: "lastcheckoktime_iso8601")
+  @JsonKey(name: "lastcheckoktime_iso8601", defaultValue: "")
   final String lastCheckOkTimeISO;
 
   /// The last time when this server checked the online state and the metadata of this stream
-  @JsonKey(name: "lastlocalchecktime")
+  @JsonKey(name: "lastlocalchecktime", defaultValue: "")
   final String lastLocalCheckTime;
 
   /// The last time when this server checked the online state and the metadata of this stream
-  @JsonKey(name: "lastlocalchecktime_iso8601")
+  @JsonKey(name: "lastlocalchecktime_iso8601", defaultValue: "")
   final String lastLocalCheckTimeISO;
 
   /// The time of the last click recorded for this stream
-  @JsonKey(name: "clicktimestamp")
+  @JsonKey(name: "clicktimestamp", defaultValue: "")
   final String clickTimestamp;
 
   /// The time of the last click recorded for this stream
-  @JsonKey(name: "clicktimestamp_iso8601")
+  @JsonKey(name: "clicktimestamp_iso8601", defaultValue: "")
   final String clickTimestampISO;
 
   /// Clicks within the last 24 hours
