@@ -1,6 +1,5 @@
-import 'package:dart_ping/dart_ping.dart';
 import 'package:dio/dio.dart';
-import 'package:dns_client/dns_client.dart';
+import 'package:radio_browser_flutter/src/base_url/base_url.dart';
 import 'package:radio_browser_flutter/src/services/implementations/index.dart';
 import 'package:radio_browser_flutter/src/services/implementations/tag_service.dart';
 import 'package:radio_browser_flutter/src/services/index.dart';
@@ -50,7 +49,7 @@ class RadioBrowserClient {
   late StationService stations;
 
   Future<void> _init(String userAgent) async {
-    final baseUrl = await _fetchBaseUrl();
+    final baseUrl = await fetchBaseUrl();
     final dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
@@ -73,34 +72,5 @@ class RadioBrowserClient {
     stationChecks = StationCheckServiceImpl(dio: dio);
 
     stations = StationServiceImpl(dio: dio);
-  }
-
-  Future<String> _fetchBaseUrl() async {
-    const baseUrl = 'all.api.radio-browser.info';
-    final dns = DnsOverHttps.google();
-    final ipAddresses = await dns.lookup(baseUrl);
-    var searchUrl = 'de1.api.radio-browser.info';
-    var lastRoundTripTime = 0x7fffffffffffffff;
-
-    /// Loop through the ipAddresses to find the fastest one
-    for (var ipAddress in ipAddresses) {
-      final ping = Ping(ipAddress.address, count: 1);
-      final future = await ping.stream.first;
-      final timeTaken = _getResponseTime(future);
-      if (timeTaken < lastRoundTripTime) {
-        lastRoundTripTime = timeTaken;
-        searchUrl = ipAddress.address;
-      }
-    }
-    dns.close(force: true);
-
-    return searchUrl;
-  }
-
-  int _getResponseTime(PingData pingData) {
-    if (pingData.response != null) {
-      return pingData.response!.time!.inMicroseconds;
-    }
-    return pingData.summary!.time!.inMicroseconds;
   }
 }

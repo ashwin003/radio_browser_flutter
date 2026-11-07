@@ -1,3 +1,3 @@
-library radio_browser_flutter;
+library;
 
 export 'src/index.dart';

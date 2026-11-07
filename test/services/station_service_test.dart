@@ -70,7 +70,7 @@ void main() {
     "en".split(","),
     3148,
     "2022-10-01 06:58:25",
-    "2022-10-01 06:58:25",
+    "2022-10-01T06:58:25Z",
     "MP3",
     96,
     false,
@@ -125,7 +125,15 @@ void main() {
     verify(
       dio.get(
         'json/stations/search',
-        queryParameters: {"seconds": 0, "limit": 999999},
+        queryParameters: {
+          "bitrateMin": 0,
+          "bitrateMax": 1000000,
+          "order": "name",
+          "reverse": false,
+          "hidebroken": false,
+          "offset": 0,
+          "limit": 100000,
+        },
         options: anyNamed('options'),
       ),
     ).called(1);
