@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'dart:io';
 
-import 'package:dart_ping/dart_ping.dart';
-import 'package:dns_client/dns_client.dart';
-
-const _unreachable = 0x7fffffffffffffff;
 const _fallbackHost = 'de1.api.radio-browser.info';
+const _probeTimeout = Duration(seconds: 3);
 
-/// Resolves all Radio Browser API servers via DNS-over-HTTPS, picks the one
-/// with the lowest ping round-trip time and returns its base URL.
+/// Resolves all Radio Browser API servers via the system resolver, picks the one
+/// that accepts a TCP connection fastest and returns its base URL.
+///
+/// A TCP connect to port 443 is used as the latency probe rather than an
+/// ICMP ping: it needs no extra dependency or process, works where ICMP is
+/// blocked or sandboxed, and measures the port the API is actually served on.
+/// All servers are probed in parallel and the first to answer wins.
 ///
 /// The IP is reverse-resolved to its hostname, because the servers' TLS
 /// certificates are issued for hostnames, not IP addresses. The trailing slash
@@ -18,26 +21,14 @@ Future<String> fetchBaseUrl() async {
 }
 
 Future<String> _fastestHost() async {
-  final dns = DnsOverHttps.google();
   InternetAddress? fastest;
   try {
-    final ipAddresses = await dns.lookup('all.api.radio-browser.info');
-    var lastRoundTripTime = _unreachable;
-
-    /// Loop through the ipAddresses to find the fastest one
-    for (final ipAddress in ipAddresses) {
-      final ping = Ping(ipAddress.address, count: 1);
-      final event = await ping.stream.first;
-      final timeTaken = _getResponseTime(event);
-      if (timeTaken < lastRoundTripTime) {
-        lastRoundTripTime = timeTaken;
-        fastest = ipAddress;
-      }
-    }
+    final ipAddresses = await InternetAddress.lookup(
+      'all.api.radio-browser.info',
+    ).timeout(_probeTimeout);
+    fastest = await _firstToConnect(ipAddresses);
   } catch (_) {
     return _fallbackHost;
-  } finally {
-    dns.close(force: true);
   }
 
   if (fastest == null) return _fallbackHost;
@@ -51,8 +42,22 @@ Future<String> _fastestHost() async {
   }
 }
 
-int _getResponseTime(PingEvent event) => switch (event) {
-      PingResponse(:final time?) => time.inMicroseconds,
-      PingSummary(:final time?) => time.inMicroseconds,
-      _ => _unreachable,
-    };
+/// Connects to every address at once and returns the first that accepts,
+/// or null if none do within [_probeTimeout].
+Future<InternetAddress?> _firstToConnect(List<InternetAddress> addresses) {
+  if (addresses.isEmpty) return Future.value(null);
+  final winner = Completer<InternetAddress?>();
+  var pending = addresses.length;
+  for (final address in addresses) {
+    Socket.connect(address, 443, timeout: _probeTimeout).then(
+      (socket) {
+        socket.destroy();
+        if (!winner.isCompleted) winner.complete(address);
+      },
+      onError: (_) {
+        if (--pending == 0 && !winner.isCompleted) winner.complete(null);
+      },
+    );
+  }
+  return winner.future;
+}
