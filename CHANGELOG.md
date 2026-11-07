@@ -27,3 +27,7 @@
 ## 0.1.1
 
 * Fixes a crash for sorting by quality
+## 0.1.2
+
+* Removes the `dart_ping` and `dns_client` dependencies. The API servers are now resolved with the system DNS resolver, and the fastest is chosen by timing a TCP connection to port 443 on every server in parallel, instead of pinging them one at a time. This starts up faster, works where ICMP is blocked or sandboxed, and fixes a dependency conflict with packages that require `code_assets` ^2.0.0 (for example `flutter_soloud` 5)
+* Upgrades `equatable` to ^3.0.0. Response models are unaffected in normal use, but note the upstream changes: `toString()` no longer lists the model's fields, and equality no longer compares `runtimeType`
